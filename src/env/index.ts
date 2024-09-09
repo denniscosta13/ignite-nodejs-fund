@@ -16,7 +16,7 @@ const envSchema = z.object({
 // quando chamamos o parse, ele pega os valores do process.env e passa pro schema
 // ao fazer isso, ele faz uma validação, do tipo do dado e se não é nulo
 // se der erro joga um novo erro, é possivel trocar o erro depois
-//export const env = envSchema.parse(process.env)
+//--export const env = envSchema.parse(process.env)
 
 //safeParse nao joga erro em execução
 //retorna um tipo de resposta (SafeParseReturnType) e dentro dele conseguimos pegar:

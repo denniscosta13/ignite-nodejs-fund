@@ -31,6 +31,7 @@ export async function transactionsRoutes(app: FastifyInstance) {
     app.get('/', { preHandler: [checkSessionIdExists] } , async (request, response) => {
         
         //recupera o cookie salvo no navegado
+        //cookie definido quando chama POST /
         const { sessionId } = request.cookies
 
         const transactions = await knex('transactions')
@@ -46,6 +47,7 @@ export async function transactionsRoutes(app: FastifyInstance) {
     app.get('/:id',  { preHandler: [checkSessionIdExists] } , async (request, response) => {
         
         //recupera o cookie salvo no navegado
+        //cookie definido quando chama POST /
         const { sessionId } = request.cookies
 
         // validacao usando zod para verificar se o parametro da url está no formato correto
@@ -74,6 +76,8 @@ export async function transactionsRoutes(app: FastifyInstance) {
 
     app.get('/summary',  { preHandler: [checkSessionIdExists] } , async (request, response) => {
         
+        //recupera o cookie salvo no navegado
+        //cookie definido quando chama POST /
         const { sessionId } = request.cookies
 
         //sum para somar o campo amounte e obter o saldo final da conta
@@ -112,18 +116,18 @@ export async function transactionsRoutes(app: FastifyInstance) {
             //gera uuid para criar o sessionId
             sessionId = randomUUID()
 
-            //adiciona a response o cookie
-            //primeiro parametro e o nome do cookie, segundo o valor que criamos com uuid
+            //adiciona a response o cookie, por sua vez o cookie vai acompanhar as proximas requests sempre que disponivel
+            //primeiro parametro e o nome do cookie, segundo o valor do cookie que criamos com uuid
             //terceiro parametro e o objeto com o path que o cookie fica disponivel ('/')
             /// nao leva em conta que aqui estamos dentro de /transactions
-            // max age e a duracao do cookie em miliseconds
+            // max age e a duracao do cookie em seconds
             response.cookie('sessionId', sessionId, {
                 path: '/',
                 maxAge:  60 * 60 * 24 * 7 //7 days
             })
             //os cookie sao enviados automaticamente, nao precisamos passar eles em nenhum outro lugar
             //assim que criarmos uma transacao ele ficara salvo no navegador de acordo com o maxAge
-            //no path que determinamos e na url da aplicacao
+            //no path que determinamos e na url da aplicacao e acompanhara as proximas requests
         }
 
         await knex('transactions')
