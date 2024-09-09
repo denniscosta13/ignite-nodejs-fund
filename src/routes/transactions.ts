@@ -11,6 +11,19 @@ import { checkSessionIdExists } from "../middleware/sessionIdValidation"
 
 
 export async function transactionsRoutes(app: FastifyInstance) {
+
+    //nao vai ser aplicado aqui, mantive para fins didaticos
+    //adiciona um hook ou prehandle global que vai ser aplicado em todas as rotas dentro do plugin
+    //como post foge da regra, o melhor e manter o prehandle individual em cada rota
+    // caso colocarmos ele no server.ts antes de registrar os  plugins, ele servira pra qualquer rota
+    // e nao apenas pra um plugin especifico
+    app.addHook('preHandler', async(request, response) => {
+        // nesse caso, da um console.log em toda rota executada
+        // esse hook global pode ser interessante pra tratar errors, por exemplo
+        console.log(`[${request.method}] ${request.url}`);
+        
+    })
+
     // passamos o middleware para o preHandle
     // passamos num array porque podemos utilizar mais de um middleware
     // antes de chegar no handler da rota, ele vai executar o prehandle/middleware
