@@ -6,8 +6,8 @@ import { randomUUID } from "node:crypto";
 import { env } from "./env";
 
 //importamos nosso 'plugin' que contem as rotas do nosso app, nesse caso é o plugin da transactions
-//caso seja necessário, a ordem pode fazer diferença
 import { transactionsRoutes } from "./routes/transactions";
+import cookie from "@fastify/cookie"; //plugin de cookie npm i @fastify/cookie
 
 const app = fastify();
 
@@ -15,6 +15,9 @@ const app = fastify();
 //prefix define qual o endpoint padrao dessas rotas, nesse caso transaction
 //dentro do plugin, passa nao ser necessario informar transaction
 //apenas do transaction em diante /, /:id etc
+
+//caso seja necessário, a ordem pode fazer diferença
+app.register(cookie)
 app.register(transactionsRoutes, {
     prefix: 'transactions'
 })

@@ -12,4 +12,5 @@
 
 - [x] A transação pode ser do tipo crédito (receita) ou débito (despesa);
 - [ ] Deve ser possível identificarmos o usuário entre as requisições;
+  - [ ] Quando o usuário criar a primeira transacao, salvamos um session_id que vai identificar a sessao de cada usuário
 - [ ] O usuário só pode visualizar transações que ele criou;
