@@ -40,6 +40,21 @@ export async function transactionsRoutes(app: FastifyInstance) {
             .send({ transactions })
     })
 
+    app.get('/summary', async (request, response) => {
+        
+        //sum para somar o campo amounte e obter o saldo final da conta
+        //first() para retorna apenas o primeiro e se livrar do array
+        /// como nesse caso é um sum() simples, só vai ter 1 registro de retorno SEMPRE
+        /// as: renomeia o nome da coluna e retorna esse nome como chave do objeto-valor
+        const summary = await knex('transactions')
+            .sum('amount', { as: 'amount' })
+            .first()
+
+        return response
+            .status(200)
+            .send({ summary })
+    })
+
     app.post('/', async (request, response) => {
         //{ title, amount, type: credit or debit}
         
