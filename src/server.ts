@@ -5,15 +5,14 @@ import { knex } from "./database"
 import { randomUUID } from "node:crypto";
 import { env } from "./env";
 
+//importamos nosso 'plugin' que contem as rotas do nosso app, nesse caso é o plugin da transactions
+//caso seja necessário, a ordem pode fazer diferença
+import { transactionsRoutes } from "./routes/transactions";
+
 const app = fastify();
 
-app.get('/hello', async () => {
-    const transactions = await knex('transactions')
-        .where('amount', 1000)
-        .select('*')
-
-    return transactions
-})
+//utilizamos o app.register para ler o plugin que contem nossas rotas
+app.register(transactionsRoutes)
 
 app.listen({
     port: env.PORT,

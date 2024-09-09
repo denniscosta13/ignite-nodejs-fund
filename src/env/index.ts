@@ -3,13 +3,14 @@ import { z } from 'zod'
 
 // node_env: development, test, production
 
+//definimos nosso schema de variaveis de ambiente, as quais também queremos validar
 const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
     DATABASE_URL: z.string(),
     PORT: z.number().default(3333) //como tem um valor default, nao precisa estar no .env, pq ja define valor aqui msm
 })
 
-//joi, yup, zod - outras ferramentas
+//joi, yup - outras ferramentas
 //zod é mais integrado ao typescript
 
 // quando chamamos o parse, ele pega os valores do process.env e passa pro schema
