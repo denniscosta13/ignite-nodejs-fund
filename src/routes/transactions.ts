@@ -9,6 +9,37 @@ import { knex } from "../database"
 import { randomUUID } from "node:crypto"
 
 export async function transactionsRoutes(app: FastifyInstance) {
+    app.get('/', async (request, response) => {
+        const transactions = await knex('transactions').select()
+
+        //return { transactions }
+        return response
+            .status(200)
+            .send({ transactions })
+    })
+
+    app.get('/:id', async (request, response) => {
+
+        // validacao usando zod para verificar se o parametro da url está no formato correto
+        const requestTransactionParams = z.object({
+            id: z.string().uuid(),
+        })
+
+        const { id } = requestTransactionParams.parse(request.params)
+
+        const transactions = await knex('transactions')
+            .where('id', id)
+            // select retorna um array, first retorna o primeiro valor, qunado queremos filtrar por id
+            // utilizamos o first para retornar o primeiro valor e não correr risco de retorno duplicado
+            // acredito que é possível validar se o retorno é unico
+            .first() 
+
+        //return { transactions }
+        return response
+            .status(200)
+            .send({ transactions })
+    })
+
     app.post('/', async (request, response) => {
         //{ title, amount, type: credit or debit}
         
