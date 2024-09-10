@@ -12,8 +12,9 @@ if(process.env.NODE_ENV === 'test') {
 //definimos nosso schema de variaveis de ambiente, as quais também queremos validar
 const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
+    DATABASE_CLIENT: z.enum(['sqlite', 'pg']),
     DATABASE_URL: z.string(),
-    PORT: z.number().default(3333) //como tem um valor default, nao precisa estar no .env, pq ja define valor aqui msm
+    PORT: z.coerce.number().default(3333) //como tem um valor default, nao precisa estar no .env, pq ja define valor aqui msm
 })
 
 //joi, yup - outras ferramentas
