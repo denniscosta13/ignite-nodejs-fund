@@ -3,7 +3,7 @@ import supertest from "supertest"
 
 //importamos o app, que agora esta separado do server, assim ao importar, não subimos o app.listen
 //importamos apenas a instancia do app
-import { app } from "../app"
+import { app } from "../src/app"
 
 beforeAll( async () => {
     await app.ready()
