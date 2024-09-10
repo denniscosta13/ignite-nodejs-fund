@@ -1,7 +1,13 @@
-import 'dotenv/config'
+import { config } from 'dotenv'
 import { z } from 'zod'
 
 // node_env: development, test, production
+
+if(process.env.NODE_ENV === 'test') {
+    config({ path: '.env.test' })
+} else {
+    config()
+}
 
 //definimos nosso schema de variaveis de ambiente, as quais também queremos validar
 const envSchema = z.object({

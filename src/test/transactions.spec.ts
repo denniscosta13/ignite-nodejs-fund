@@ -1,6 +1,7 @@
-import { it, beforeAll, afterAll, describe, expect } from "vitest"
+import { it, beforeAll, afterAll, describe, expect, beforeEach } from "vitest"
 import supertest from "supertest"
 import { app } from "../app"
+import { execSync } from "child_process"
 
 //describe cria uma categoria ou um agrupamento de testes
 //podemos criar subcategorias
@@ -8,6 +9,11 @@ describe('Transactions routes', () => {
     
     beforeAll( async () => {
         await app.ready()
+    })
+
+    beforeEach(() => {
+        execSync('npm run knex -- migrate:rollback --all')
+        execSync('npm run knex -- migrate:latest')
     })
     
     afterAll(async () => {

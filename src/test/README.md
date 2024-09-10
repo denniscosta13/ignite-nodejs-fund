@@ -14,11 +14,11 @@ No back-end, o ator é o proprio front-end, que irá fazer chamadas HTTP, websoc
 
 ## Piramide de testes
 
-Apesar de testes `e2e` serem mais fácil de utilizar, são testes mais lentos. Não que eles demorem muito, 
+Apesar de testes `e2e` serem mais fácil de utilizar, são testes mais lentos. Não que eles demorem muito,  
 mas em uma escala maior, isso pode tomar muitos minutos da etapa de teste. Por isso, existe uma pirâmide que desenha como
 os testes vão ser distribuídos, em forma de pirâmide:
 
-```  
+```txt  
             ===e2e===
     ====integracao=====
 ========unitarios=======
@@ -33,9 +33,10 @@ Muitos testes **unitários**, seguidos de testes de **integração** e poucos te
 - Validação - feito a operação, a resposta é a esperada?
 
 ### package.json
+
 `npm run test / npm test`
 
-```js 
+```js  
 // adicionar ao package.json
 "test": "vitest" 
 ```
@@ -92,7 +93,7 @@ Por fim, com o expect, definimos qual a resposta que esperamos após termos envi
 Como os plugins do app são `async`, pode acontecer dos testes falharem, já que o app ainda não havia registrado todos os plugins.
 Para resolver isso, utilizamos do vitest o método `beforeAll` e `afterAll`.
 
-Esses dois métodos serão executados apenas uma vez antes e depois de todos os testes. 
+Esses dois métodos serão executados apenas uma vez antes e depois de todos os testes.  
 O nosso import fica assim:
 
 ```js
@@ -132,3 +133,31 @@ OS TESTES DEVEM SER INDEPENDENTES, SE ELES DEPENDEM UM DO OUTRO, DEVEM ESTAR JUN
 Nesse caso, vamos primeiro enviar um `post` para obter a `session id` no cookie, capturar esse cookie do header e, por fim,
 fazer o `get` das transações com o cookie já armazenado.
 
+## Ambiente de teste
+
+Para que os nosso testes não fiquem poluindo nosso ambiente de produção, precisamos criar um ambiente que esteja sempre  
+limpo para testes.  
+Portanto, definimos um arquivo `.env` com as variáveis necessárias.  
+Dentro, desse arquivo, não é necessário definir a variáveç `NODE_ENV= test`, porque quando utilizamos um framework de testes,  
+como Jest ou Vitest, eles já preenchem essa variável no `process.env`, que é onde ficam as variáveis do nosso sistema.
+
+Dessa forma, no `index.ts` da pasta `env` validamos se o `NODE_ENV === 'test'`.  
+Em caso positivo, utilizamos o `config` do módulo `dotenv` passando um objeto com o path do `.env.test`  
+Caso contrário, chamamos o `config` vazio, assim ele vai entender que o arquivo padrão é o `.env` de development.
+
+### Banco de dados
+
+Para garantir que nosso banco de dados está limpo e não corremos o risco de um teste interferir em outro, precisamos
+executar as migrations no banco de dados de teste, pra cada teste executado.
+
+Sendo assim, utilizando o `beforeEach` do `vitest`, vamos chamar os seguintes comandos, que servem pra limpar as tabelas
+e depois recriá-las:
+
+```js
+    execSync('npm run knex -- migrate:rollback --all') //faz rollback do que foi feito
+    execSync('npm run knex -- migrate:latest') //cria novamente
+```
+
+> execSync é do child-process do node, e executa comandos na linha de comando.
+
+Isso torna o teste mais lento, por isso que testes `e2e` devem ser **poucos e bons testes**, pois levam muito tempo.
