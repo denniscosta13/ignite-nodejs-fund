@@ -103,3 +103,32 @@ Feito isso, no `beforeAll` definimos para aguardar o app estar `ready`, para só
 devidamente registradas.
 
 Por fim, ao finalizar os testes, derrubamos o servidor com o `close` no `afterAll`.
+
+### describe()
+
+Serve para criar uma categoria ou agrupamento de testes. É possível criar subcategorias também.
+
+### it() vs. test()
+
+São a mesma coisas, a diferença está na leitura do teste.
+Em inglês, é costume escrever o teste como "it should be able to create a new transaction".
+
+Utilizando o `it`, a leitura ficaria da mesma forma, como no exemplo:
+
+```js
+    it('should be able to create a new transction', async () => {
+        //logic here
+    })
+```
+
+## Contexto único do teste
+
+Para listar (GET) as transações criadas na nossa aplicação, é necessário um `session id` que fica salva nos cookies.
+Para obter essa `session id`, precisamos primeiro criar uma transação, para depois conseguir listar elas.
+
+NÃO PODEMOS REPASSAR O COOKIE DO TESTE DE CRIAÇÃO DA TRANSAÇÃO.
+OS TESTES DEVEM SER INDEPENDENTES, SE ELES DEPENDEM UM DO OUTRO, DEVEM ESTAR JUNTOS.
+
+Nesse caso, vamos primeiro enviar um `post` para obter a `session id` no cookie, capturar esse cookie do header e, por fim,
+fazer o `get` das transações com o cookie já armazenado.
+
